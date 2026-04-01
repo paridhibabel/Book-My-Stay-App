@@ -1,0 +1,105 @@
+   public static void main(String[] args) {
+ 
+        System.out.println("========================================================");
+        System.out.println("  Use Case 3: Centralized Room Inventory Management");
+        System.out.println("========================================================\n");
+ 
+        System.out.println("──────────────────────────────────────────────────");
+        System.out.println("Step 1: Initializing RoomInventory");
+        System.out.println("──────────────────────────────────────────────────");
+ 
+        RoomInventory inventory = new RoomInventory();
+        System.out.println("RoomInventory initialized successfully.\n");
+ 
+        System.out.println("──────────────────────────────────────────────────");
+        System.out.println("Step 2: Creating Room objects (characteristics)");
+        System.out.println("──────────────────────────────────────────────────");
+ 
+        Room singleRoom    = new Room("Single",    89.99,  1, "Cosy room with a single bed");
+        Room doubleRoom    = new Room("Double",   129.99,  2, "Spacious room with a double bed");
+        Room suiteRoom     = new Room("Suite",    249.99,  4, "Luxury suite with a lounge area");
+        Room deluxeRoom    = new Room("Deluxe",   179.99,  3, "Deluxe room with city view");
+        Room penthouseRoom = new Room("Penthouse",499.99,  6, "Top-floor penthouse, panoramic views");
+ 
+        System.out.println(singleRoom);
+        System.out.println(doubleRoom);
+        System.out.println(suiteRoom);
+        System.out.println(deluxeRoom);
+        System.out.println(penthouseRoom);
+ 
+        System.out.println("\nNOTE: Room objects carry NO availability data.");
+        System.out.println("      Availability is managed solely by RoomInventory.\n");
+ 
+        System.out.println("──────────────────────────────────────────────────");
+        System.out.println("Step 3: Retrieving current inventory (HashMap)");
+        System.out.println("──────────────────────────────────────────────────");
+ 
+        Map<String, Integer> currentAvailability = inventory.getRoomAvailability();
+ 
+        System.out.println("\nCurrent Room Availability:");
+        System.out.println("┌──────────────┬────────────────────┐");
+        System.out.println("│  Room Type   │  Available Rooms   │");
+        System.out.println("├──────────────┼────────────────────┤");
+ 
+        for (Map.Entry<String, Integer> entry : currentAvailability.entrySet()) {
+            String status = entry.getValue() > 0 ? "Available" : "Sold Out";
+            System.out.printf("│  %-12s│  %-2d (%s)%n",
+                    entry.getKey(), entry.getValue(), status);
+        }
+        System.out.println("└──────────────┴────────────────────┘\n");
+ 
+     
+        System.out.println("──────────────────────────────────────────────────");
+        System.out.println("Step 4: Updating availability (controlled updates)");
+        System.out.println("──────────────────────────────────────────────────");
+ 
+        System.out.println("\nScenario: 2 Single rooms booked → availability 5 → 3");
+        inventory.updateAvailability("Single", 3);
+ 
+        System.out.println("Scenario: 1 Suite booked       → availability 2 → 1");
+        inventory.updateAvailability("Suite", 1);
+ 
+        System.out.println("Scenario: Penthouse sold out   → availability 1 → 0");
+        inventory.updateAvailability("Penthouse", 0);
+ 
+        System.out.println("Scenario: 1 Double cancelled   → availability 3 → 4");
+        inventory.updateAvailability("Double", 4);
+ .
+        System.out.println("\n──────────────────────────────────────────────────");
+        System.out.println("Step 5: Displaying updated inventory state");
+        System.out.println("──────────────────────────────────────────────────");
+ 
+        Map<String, Integer> updatedAvailability = inventory.getRoomAvailability();
+ 
+        System.out.println("\nUpdated Room Availability:");
+        System.out.println("┌──────────────┬──────────────────────┐");
+        System.out.println("│  Room Type   │  Available Rooms     │");
+        System.out.println("├──────────────┼──────────────────────┤");
+ 
+        for (Map.Entry<String, Integer> entry : updatedAvailability.entrySet()) {
+            String status = entry.getValue() > 0 ? "Available" : "*** SOLD OUT ***";
+            System.out.printf("│  %-12s│  %-2d  %-16s│%n",
+                    entry.getKey(), entry.getValue(), status);
+        }
+        System.out.println("└──────────────┴──────────────────────┘");
+ 
+        System.out.println("\n========================================================");
+        System.out.println("  Summary: Why HashMap over Scattered Variables?");
+        System.out.println("========================================================");
+        System.out.println("  Use Case 2 (Previous - Scattered Variables):");
+        System.out.println("    int singleRoomsAvailable = 5; // disconnected");
+        System.out.println("    int doubleRoomsAvailable = 3; // disconnected");
+        System.out.println("    int suiteRoomsAvailable  = 2; // disconnected");
+        System.out.println("    → Adding a new room type requires new variable +");
+        System.out.println("      changes to every method that checks availability.");
+        System.out.println();
+        System.out.println("  Use Case 3 (Current - Centralized HashMap):");
+        System.out.println("    roomAvailability.put(\"Single\", 5); // O(1)");
+        System.out.println("    roomAvailability.put(\"Double\", 3); // O(1)");
+        System.out.println("    roomAvailability.put(\"Suite\",  2); // O(1)");
+        System.out.println("    → Adding a new room type = 1 line. Zero other changes.");
+        System.out.println("    → Single source of truth. Always consistent.");
+        System.out.println("========================================================\n");
+    }
+}
+ 
